@@ -9,6 +9,26 @@ This adaption of the system allows users to define conversational agents for mes
 
 The system is currently released as a *proof of concept* that makes Bottery agents communicate through a Telegram chatbot.
 
+## Installation and setup
+
+Download the repository on your system (requires NodeJS).
+Navigate to the `src` directory and install all required NPM packages by running `npm update`.
+
+Edit the `tgbottery.js` file, replacing the string in line
+```
+const slimbot = new Slimbot('TELEGRAM TOKEN');
+```
+with your own Telegram bot token.
+
+Finally, setup a new Firebase project and activate the real-time database service.
+In your project's settings page, navigate to the "Service Accounts" tab and generate a new private key (see the [official documentation](https://firebase.google.com/docs/admin/setup#add_firebase_to_your_app)).
+Download the JSON file containing your credentials to `/src/serviceAccountKey.json`.
+
+Run the bottery agent (only *pull mode* is supported at the time):
+```
+nodejs tgbottery.js
+```
+
 ## Future work
 
 The **first public release** will allow developers to easily deploy Bottery agents to chatbot platforms (including, at least, Telegram).
