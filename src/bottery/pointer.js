@@ -16,21 +16,23 @@
 var tracery = require('./tracery.js').tracery; //ra01
 var inQuotes = require('./tracery.js').inQuotes; //ra01
 var isString = require('./tracery.js').isString; //ra01
-var BBO = require('./blackboard3.js').BBO;// Oggetti presenti nella lavagna
+var BBO = require('./blackboard.js').BBO;
 var performAction = require('./map.js').performAction; //ra01
 var evaluateCondition = require('./map.js').evaluateCondition; //ra01
 var evaluateExpression = require('./map.js').evaluateExpression; //ra01
 var parseMapPath = require('./map.js').parseMapPath; //ra01   
 
 // Riceve l'id della chat
-var Pointer = function(app) {
-  //var pointer = this;
-
-  this.app = app;  //ra01 Aggiunto l'oggetto app
-  this.outputQueue = [];  //ra01 preso da io
+var Pointer = function(chatId, message, map) {
+  
+  this.chatId = chatId;
+  this.message = message;
+  this.map = map;
+  this.numberUpdate = 0;    
+  this.outputQueue = []; 
   
   this.reply = {
-    chatId: app.chatId,
+    chatId: chatId,
     message: [],
     chips: {}
   };
@@ -38,7 +40,6 @@ var Pointer = function(app) {
   this.exitCountdown = 0;
   this.inputLog = [];
   this.analyzedExits = [];
-  this.chatRef = admin.database().ref(app.map.name+'/chats/'+app.chatId);
   
 }
 
@@ -127,9 +128,8 @@ Pointer.prototype.clearInput = function() {
 
     this.updateExits();
 
-    // ra01 - riaggiornamento puntatore stato
-    //if (t < this.app.chatId) {
-    if (pointer.app.numberUpdate < 10 && (
+    // recursive recall
+    if (pointer.numberUpdate < 10 && (
       this.previusState === undefined ||
       this.previusState !== this.currentState)) {
       this.previusState = this.currentState;
@@ -144,7 +144,7 @@ Pointer.prototype.clearInput = function() {
        this.blackboard.children.INPUT_NUMBER = null;
        this.blackboard.value = null;
        console.log(this.blackboard);
-       admin.database().ref(pointer.app.map.name+'/chats/'+this.app.chatId).update({
+       admin.database().ref(pointer.map.name+'/chats/'+this.chatId).update({
          currentState: this.currentState.key,
          blackboard: this.blackboard
        });
@@ -535,9 +535,11 @@ Pointer.prototype.attemptOutput = function() {
   var pointer = this;
   var section = pointer.outputQueue.shift();
   if (section && !pointer.isOccupied) {
-    console.log(pointer.app.chatId + ': ' + section.data);
-    // Save message on firebase
-    _saveMessage(section.data, pointer);
+    console.log(pointer.chatId + ': ' + section.data);
+    
+    if (isString(section.data)) {
+      pointer.reply.message.push(section.data);
+    }
     pointer.attemptOutput();
   }
   // ra01 cancello la parte sotto perché emetto l'output tutto in una volta
