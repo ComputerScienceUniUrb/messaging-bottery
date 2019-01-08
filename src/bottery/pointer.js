@@ -237,7 +237,18 @@ Pointer.prototype.goTo = function(key, useExit) {
   }
 
   if (useExit) {
-    //ra01 $.each(useExit.template.actions, function(index, action) {
+    // TODO ra01 set star IDENTIFICATOR
+    if (useExit.template.actions[0] &&
+      useExit.template.actions[0].expression.raw == 'STAR') {
+      let input = this.get('INPUT').toUpperCase();
+      let posAst = useExit.template.conditions[0].rule.indexOf("*");
+      let prefix = useExit.template.conditions[0].rule.substring(0, posAst).toUpperCase();
+      let suffix = useExit.template.conditions[0].rule.substring(posAst+1).toUpperCase();
+      let star = input.replace(prefix, "");
+      star = star.replace(suffix, "");
+      this.set('STAR', star.toLowerCase());
+    }
+    // $.each(useExit.template.actions, function(index, action) {
     useExit.template.actions.forEach(function(action) {
       performAction(action, pointer);
     });
