@@ -1,7 +1,7 @@
 {
   "name": "node_server_bottery",
   "version": "1.0.0",
-  "description": "This in an implementation of bottery server side",
+  "description": "Server-side Bottery implementation for instant messaging platforms.",
   "main": "tgbottery.js",
   "dependencies": {
     "firebase-admin": "^6.0.0",
@@ -13,12 +13,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/LorenzCK/message-in-a-bottery/node_server_bottery.git"
+    "url": "git+https://github.com/ComputerScienceUniUrb/messaging-bottery.git"
   },
   "author": "Alessio Ricci",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/RiccioAle/message-in-a-bottery/issues"
+    "url": "https://github.com/ComputerScienceUniUrb/messaging-bottery/issues"
   },
-  "homepage": "https://github.com/RiccioAle/message-in-a-bottery#readme"
+  "homepage": "https://github.com/ComputerScienceUniUrb/messaging-bottery"
 }
